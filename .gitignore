@@ -8,15 +8,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Compiled Python Files
-*.so
-
-# Distribution / Packaging
+# Build Files
 build/
 dist/
 *.egg-info/
 
-# IDE Files
+# IDE
 .vscode/
 .idea/
 
@@ -26,25 +23,23 @@ dist/
 # Logs
 *.log
 
-# Coverage
+# Testing
+.pytest_cache/
 .coverage
 htmlcov/
-.pytest_cache/
 
 # Jupyter
 .ipynb_checkpoints/
 
-# macOS
+# OS Files
 .DS_Store
-
-# Windows
 Thumbs.db
 
-# Captured Files
+# Network Capture Files
 *.pcap
 *.pcapng
 *.csv
 
-# Project Data (optional)
+# Data Folder
 data/captures/*
 !data/captures/.gitkeep

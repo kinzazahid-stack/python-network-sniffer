@@ -1,33 +1,45 @@
-from scapy.all import IP, TCP, UDP
+from scapy.layers.inet import IP, TCP, UDP, ICMP
 
 
 def parse_packet(packet):
-    if IP in packet:
-        src_ip = packet[IP].src
-        dst_ip = packet[IP].dst
-        protocol = packet[IP].proto
-        length = len(packet)
+    """
+    Extract useful information from a network packet.
 
-        src_port = "-"
-        dst_port = "-"
+    Returns:
+        dict: Parsed packet information
+        None: If packet doesn't contain an IP layer
+    """
 
-        if TCP in packet:
-            src_port = packet[TCP].sport
-            dst_port = packet[TCP].dport
-            protocol = "TCP"
+    if IP not in packet:
+        return None
 
-        elif UDP in packet:
-            src_port = packet[UDP].sport
-            dst_port = packet[UDP].dport
-            protocol = "UDP"
+    info = {
+        "Source": packet[IP].src,
+        "Destination": packet[IP].dst,
+        "Protocol": "Unknown",
+        "Length": len(packet),
+        "Source Port": "-",
+        "Destination Port": "-"
+    }
 
-        return {
-            "Source": src_ip,
-            "Destination": dst_ip,
-            "Protocol": protocol,
-            "Length": length,
-            "Source Port": src_port,
-            "Destination Port": dst_port,
-        }
+    # TCP Packet
+    if TCP in packet:
+        info["Protocol"] = "TCP"
+        info["Source Port"] = packet[TCP].sport
+        info["Destination Port"] = packet[TCP].dport
 
-    return None
+    # UDP Packet
+    elif UDP in packet:
+        info["Protocol"] = "UDP"
+        info["Source Port"] = packet[UDP].sport
+        info["Destination Port"] = packet[UDP].dport
+
+    # ICMP Packet
+    elif ICMP in packet:
+        info["Protocol"] = "ICMP"
+
+    else:
+        protocol_number = packet[IP].proto
+        info["Protocol"] = f"IP ({protocol_number})"
+
+    return info
